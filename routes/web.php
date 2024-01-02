@@ -18,6 +18,9 @@ use Livewire\Volt\Volt;
 Volt::route('/', 'front.home');
 
 Volt::route('/admin/dashboard', 'back.dashboard');
+Volt::route('/admin/products', 'back.products.product-list');
+Volt::route('/admin/products/add', 'back.products.product-add');
+Volt::route('/admin/products/view/{id}', 'back.products.product-detail');
 
 // Route::get('/', function () {
 //     return view('welcome');
