@@ -6,7 +6,7 @@ use Livewire\Component;
 
 class AdminSidebar extends Component
 {
-    public $content;
+    public $title;
     
     public function render()
     {
