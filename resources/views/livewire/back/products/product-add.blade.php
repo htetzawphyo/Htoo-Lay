@@ -30,7 +30,7 @@ $save = function() {
     $this->instock = !empty($this->instock[0]) ? 1 : 0; // For Instock
 
     $imageName = time() . '-' . $this->image->getClientOriginalName();
-    $this->image->storeAs('product-image', $imageName);
+    $this->image->storeAs('public/product-image', $imageName);
 
     Product::create([
         'category_id' => $this->category_id,

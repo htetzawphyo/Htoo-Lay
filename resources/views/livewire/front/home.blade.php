@@ -1,8 +1,9 @@
 <?php
 
+use App\Models\Product;
 use function Livewire\Volt\{state};
 
-//
+state(['products' => fn() => Product::with('category')->get()]);
 
 ?>
 
@@ -45,18 +46,20 @@ use function Livewire\Volt\{state};
 
         <div class="container mx-auto flex items-center flex-wrap pt-4 pb-12">
 
-            <div class="w-full rounded-lg shadow-lg md:w-1/3 xl:w-1/4 p-6 flex flex-col">
-                <div>
-                    <img class="hover:grow hover:shadow-lg" src="https://images.unsplash.com/photo-1555982105-d25af4182e4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
-                    <div class="pt-3 mb-3 flex items-center justify-between">
-                        <p class="text-violet-800 font-primary font-bold">Product Name</p>
-                        <p class="pt-1 text-gray-900">£9.99</p>
+            @foreach ($products as $product)                
+                <div class="w-full rounded-lg shadow-lg md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+                    <div>
+                        <img class="hover:grow hover:shadow-lg" src="{{asset('storage/product-image/'.$product->image)}}">
+                        <div class="pt-3 mb-3 flex items-center justify-between">
+                            <p class="text-violet-800 font-primary font-bold">{{ $product->name }}</p>
+                            <p class="pt-1 text-gray-900">{{ $product->price }} Ks</p>
+                        </div>
+                        <a href="" class="font-primary inline-block rounded bg-violet-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-violet-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-violet-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-violet-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">View Detail</a>
                     </div>
-                    <a href="" class="font-primary inline-block rounded bg-violet-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-violet-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-violet-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-violet-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">View Detail</a>
                 </div>
-            </div>
+            @endforeach
 
-            <div class="w-full rounded-lg shadow-lg md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+            {{-- <div class="w-full rounded-lg shadow-lg md:w-1/3 xl:w-1/4 p-6 flex flex-col">
                 <div>
                     <img class="hover:grow hover:shadow-lg" src="https://images.unsplash.com/photo-1508423134147-addf71308178?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80">
                     <div class="pt-3 mb-3 flex items-center justify-between">
@@ -131,7 +134,7 @@ use function Livewire\Volt\{state};
                     </div>
                     <a href="" class="font-primary inline-block rounded bg-violet-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-violet-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-violet-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-violet-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">View Detail</a>
                 </div>
-            </div>
+            </div> --}}
 
         </div>
 

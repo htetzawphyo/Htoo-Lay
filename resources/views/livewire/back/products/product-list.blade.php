@@ -1,8 +1,15 @@
 <?php
 
-use function Livewire\Volt\{state, layout};
+use App\Models\Product;
+use function Livewire\Volt\{state, layout, usesPagination};
 
 layout('livewire.back.admin-sidebar');
+
+usesPagination();
+
+// with(fn () => ['products' => Product::paginate(10)]);
+state(['products' => fn() => Product::with('category')->get()]);
+// state(['products' => fn() => Product::with('category')->paginate(2)]);
 
 ?>
 
@@ -19,32 +26,39 @@ layout('livewire.back.admin-sidebar');
                 <thead class="border-b font-medium dark:border-neutral-500">
                 <tr>
                     <th scope="col" class="px-6 py-4">#</th>
-                    <th scope="col" class="px-6 py-4">First</th>
-                    <th scope="col" class="px-6 py-4">Last</th>
-                    <th scope="col" class="px-6 py-4">Handle</th>
+                    <th scope="col" class="px-6 py-4">Name</th>
+                    <th scope="col" class="px-6 py-4">Price</th>
+                    <th scope="col" class="px-6 py-4">Stock</th>
+                    <th scope="col" class="px-6 py-4">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="border-b dark:border-neutral-500">
-                    <td class="whitespace-nowrap px-6 py-4 font-medium">1</td>
-                    <td class="whitespace-nowrap px-6 py-4">Mark</td>
-                    <td class="whitespace-nowrap px-6 py-4">Otto</td>
-                    <td class="whitespace-nowrap px-6 py-4">@mdo</td>
-                </tr>
-                <tr class="border-b dark:border-neutral-500">
-                    <td class="whitespace-nowrap px-6 py-4 font-medium">2</td>
-                    <td class="whitespace-nowrap px-6 py-4">Jacob</td>
-                    <td class="whitespace-nowrap px-6 py-4">Thornton</td>
-                    <td class="whitespace-nowrap px-6 py-4">@fat</td>
-                </tr>
-                <tr class="border-b dark:border-neutral-500">
-                    <td class="whitespace-nowrap px-6 py-4 font-medium">3</td>
-                    <td class="whitespace-nowrap px-6 py-4">Larry</td>
-                    <td class="whitespace-nowrap px-6 py-4">Wild</td>
-                    <td class="whitespace-nowrap px-6 py-4">@twitter</td>
-                </tr>
+                    @foreach ($products as $product)                        
+                        <tr class="border-b dark:border-neutral-500">
+                            <td class="whitespace-nowrap px-6 py-4 font-medium">1</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{ $product->name }}</td>
+                            <td class="whitespace-nowrap px-6 py-4">{{ $product->price }} Ks</td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                @if ($product->instock)
+                                    <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">In Stock</span>
+                                @else
+                                    <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Out of Stock</span>
+                                @endif
+                            </td>
+                            <td class="flex items-center px-6 py-4">
+                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
+
+            {{-- {{ $products->links() }} --}}
             </div>
         </div>
         </div>
