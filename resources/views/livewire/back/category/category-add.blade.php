@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Category;
 use function Livewire\Volt\{state, layout, rules};
 
 layout('livewire.back.admin-sidebar');
@@ -13,13 +14,13 @@ rules([
 ]);
 
 $save = function() {
-  $this->validate();
+    $this->validate();
 
-  Category::create([
+    Category::create([
         "name" => $this->name
-  ]);
+    ]);
 
-  $this->redirect("/admin/categories", navigate: true);
+    $this->redirect("/admin/categories", navigate: true);
 }
 
 ?>
