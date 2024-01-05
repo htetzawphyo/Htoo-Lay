@@ -22,6 +22,10 @@ Volt::route('/admin/products', 'back.products.product-list');
 Volt::route('/admin/products/add', 'back.products.product-add');
 Volt::route('/admin/products/view/{id}', 'back.products.product-detail');
 
+Volt::route('/admin/categories', 'back.category.category-list');
+VOlt::route('/admin/category/add', 'back.category.category-add');
+Volt::route('/admin/category/view/{id}', 'back.category.category-detail');
+
 // Route::get('/', function () {
 //     return view('welcome');
 // });

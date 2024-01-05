@@ -8,7 +8,7 @@ layout('livewire.back.admin-sidebar');
 
 <div>
     <div class="mb-5">
-        <h3 class="text-xl font-medium">Product List</h3>
+        <h3 class="text-xl font-medium">Category List</h3>
     </div>
 
     <div class="flex flex-col">
@@ -19,9 +19,8 @@ layout('livewire.back.admin-sidebar');
                 <thead class="border-b font-medium dark:border-neutral-500">
                 <tr>
                     <th scope="col" class="px-6 py-4">#</th>
-                    <th scope="col" class="px-6 py-4">First</th>
-                    <th scope="col" class="px-6 py-4">Last</th>
-                    <th scope="col" class="px-6 py-4">Handle</th>
+                    <th scope="col" class="px-6 py-4">Name</th>
+                    <th scope="col" class="px-6 py-4">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -29,19 +28,16 @@ layout('livewire.back.admin-sidebar');
                     <td class="whitespace-nowrap px-6 py-4 font-medium">1</td>
                     <td class="whitespace-nowrap px-6 py-4">Mark</td>
                     <td class="whitespace-nowrap px-6 py-4">Otto</td>
-                    <td class="whitespace-nowrap px-6 py-4">@mdo</td>
                 </tr>
                 <tr class="border-b dark:border-neutral-500">
                     <td class="whitespace-nowrap px-6 py-4 font-medium">2</td>
                     <td class="whitespace-nowrap px-6 py-4">Jacob</td>
                     <td class="whitespace-nowrap px-6 py-4">Thornton</td>
-                    <td class="whitespace-nowrap px-6 py-4">@fat</td>
                 </tr>
                 <tr class="border-b dark:border-neutral-500">
                     <td class="whitespace-nowrap px-6 py-4 font-medium">3</td>
                     <td class="whitespace-nowrap px-6 py-4">Larry</td>
                     <td class="whitespace-nowrap px-6 py-4">Wild</td>
-                    <td class="whitespace-nowrap px-6 py-4">@twitter</td>
                 </tr>
                 </tbody>
             </table>
