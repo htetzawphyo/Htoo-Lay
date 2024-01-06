@@ -22,31 +22,38 @@ rules([
     'name' => ['required'],
     'price' => ['required','numeric'],
     'category_id' => ['required', 'numeric'],
-    'image' => ['required', 'image', 'mimes:png,jpg']
+    'image' => ['image', 'mimes:png,jpg']
 ]);
 
 $updateProduct = function() {
     $this->validate();
-
-    $this->instock = !empty($this->instock[0]) ? 1 : 0; // For Instock
     
-    dd($this->name, $this->price, $this->category_id, $this->description, $this->image, $this->instock);
-    // $imageName = time() . '-' . $this->image->getClientOriginalName();
-    // $this->image->storeAs('public/product-image', $imageName);
+    $this->instock = $this->instock ? 1 : 0; // For Instock
 
-    // Product::create([
-    //     'category_id' => $this->category_id,
-    //     'name' => $this->name,
-    //     'price' => $this->price,
-    //     'description' => $this->description,
-    //     'image' => $imageName,
-    //     'instock' => $this->instock,
-    // ]);
+    $imageName;
+    if($this->image){
+        Storage::delete('public/product-image'. $this->product->image);
 
-    // $this->redirect("/admin/products", navigate: true);
+        $imageName = time() . '-' . $this->image->getClientOriginalName();
+        $this->image->storeAs('public/product-image', $imageName);
+    }else{
+        $imageName = $this->product->image;
+    }
+
+    $product = Product::find($this->product->id);
+    $product->category_id = $this->category_id;
+    $product->name = $this->name;
+    $product->price = $this->price;
+    $product->description = $this->description;
+    $product->image = $imageName;
+    $product->instock = $this->instock;
+    
+    $product->save();
+
+    $this->redirect("/admin/products", navigate: true);
 };
 
-mount(function($id) use (&$updateProduct) {
+mount(function($id) {
     $product = Product::find($id);
     
     $this->product = $product;
@@ -54,12 +61,8 @@ mount(function($id) use (&$updateProduct) {
     $this->price = $product->price;
     $this->category_id = $product->category_id;
     $this->description = $product->description;
-    // $this->image = $product->image;
-    $this->instock = $product->instock;
-
-
+    $this->instock = $product->instock ? true : false;
 })
-
 
 ?>
 
@@ -101,7 +104,7 @@ mount(function($id) use (&$updateProduct) {
                 <textarea wire:model="description" placeholder="Product Description" type="text" id="1fba1b87-1d34-4cb2-94bd-873d3bdc08ea" rows="4" class="w-full block rounded border dark:border-none dark:bg-gray-200 py-[9px] px-3 pr-4 text-sm focus:border-cyan-500 focus:ring-1 focus:ring-blue-400 focus:outline-none shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)]"></textarea>
             </div>
         </div>
-
+        
         <div class="-mx-3 mb-6">
             <div class="w-full px-3">
                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="countries">
@@ -111,7 +114,7 @@ mount(function($id) use (&$updateProduct) {
                     <option selected>Choose a category</option>
 
                     @foreach (Category::all() as $category)                        
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        <option value="{{ $category->id }}" @selected($category_id)>{{ $category->name }}</option>
                     @endforeach
 
                 </select>
@@ -142,11 +145,11 @@ mount(function($id) use (&$updateProduct) {
 
         <div class="-mx-3 mb-6">
             <div class="w-full px-3 ">
-                <input wire:model="instock" id="checked-checkbox" type="checkbox" value="{{$instock}}" @checked($instock) class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] cursor-pointer">
+                <input wire:model="instock" id="checked-checkbox" type="checkbox"  @checked($instock) class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] cursor-pointer">
                 <label for="checked-checkbox" class="ms-2 text-md font-medium text-gray-900 dark:text-gray-700 cursor-pointer">In Stock</label>
             </div>
         </div>
 
-        <button type="submit" class="inline-block rounded bg-cyan-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-cyan-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-cyan-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-cyan-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">Submit</button>
+        <button type="submit" class="inline-block rounded mb-4 bg-cyan-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-cyan-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-cyan-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-cyan-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">Submit</button>
     </form>  
 </div>

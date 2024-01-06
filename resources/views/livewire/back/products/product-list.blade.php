@@ -47,9 +47,10 @@ with(fn () => ['products' => Product::with('category')->paginate(10)]);
                                     <a href="/admin/products/view/{{ $product->id }}" wire:navigate class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
-                                    <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">
+                                    <button type="button" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
+                                    wire:confirm="Are you sure you want to delete this product?">
                                         <i class="fa-solid fa-trash"></i>
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
