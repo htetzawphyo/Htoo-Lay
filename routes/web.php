@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Back\AdminSidebar;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,7 +18,10 @@ use Livewire\Volt\Volt;
 
 Volt::route('/', 'front.home');
 
+Volt::route('/admin/login', 'auth.login');
+
 Volt::route('/admin/dashboard', 'back.dashboard');
+// Volt::route('/admin/dashboard', AdminSidebar::class);
 Volt::route('/admin/products', 'back.products.product-list');
 Volt::route('/admin/products/add', 'back.products.product-add');
 Volt::route('/admin/products/view/{id}', 'back.products.product-detail');
