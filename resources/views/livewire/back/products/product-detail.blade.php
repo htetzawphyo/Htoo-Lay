@@ -32,7 +32,7 @@ $updateProduct = function() {
 
     $imageName;
     if($this->image){
-        Storage::delete('public/product-image'. $this->product->image);
+        Storage::delete('public/product-image/'. $this->product->image);
 
         $imageName = time() . '-' . $this->image->getClientOriginalName();
         $this->image->storeAs('public/product-image', $imageName);
