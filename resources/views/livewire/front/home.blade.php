@@ -10,7 +10,9 @@ usesPagination();
 state(['search']);
 
 with(fn () => [
-    'products' => Product::with('category')->where('name', 'like', '%' . $this->search . '%')->paginate(10),
+    'products' => Product::with('category')
+                    ->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('product_code', 'like', '%' . $this->search . '%')->paginate(10),
 ]);
 
 ?>
@@ -125,7 +127,10 @@ with(fn () => [
                         <div>
                             <img class="hover:grow hover:shadow-lg " src="{{asset('storage/product-image/'.$product->image)}}">
                             <div class="pt-3 mb-3 flex items-center justify-between">
-                                <p class="text-violet-800 font-primary font-bold">{{ $product->name }}</p>
+                                <p class="text-violet-800 font-primary font-bold">
+                                    {{ $product->name }} 
+                                    <span class="text-xs text-gray-800"> - {{ $product->product_code }}</span>
+                                </p>
                                 <p class="pt-1 text-gray-900">{{ $product->price }} Ks</p>
                             </div>
                         </div>

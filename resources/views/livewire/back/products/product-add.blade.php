@@ -25,6 +25,9 @@ rules([
 ]);
 
 $save = function() {
+    $latestId = Product::latest()->value('id') ?? 0;
+    $product_code = sprintf('CT'.'%04d',($latestId + 1));
+    
     $this->validate();
 
     $this->instock = !empty($this->instock[0]) ? 1 : 0; // For Instock
@@ -35,6 +38,7 @@ $save = function() {
     Product::create([
         'category_id' => $this->category_id,
         'name' => $this->name,
+        'product_code' => $product_code,
         'price' => $this->price,
         'description' => $this->description,
         'image' => $imageName,

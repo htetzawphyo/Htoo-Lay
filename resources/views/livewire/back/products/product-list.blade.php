@@ -10,7 +10,9 @@ usesPagination();
 state(['search']);
 
 with(fn () => [
-    'products' => Product::with('category')->where('name', 'like', '%' . $this->search . '%')->paginate(10),
+    'products' => Product::with('category')
+                    ->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('product_code', 'like', '%' . $this->search . '%')->paginate(10),
 ]);
 
 $delete = function($id) {
@@ -57,7 +59,7 @@ $delete = function($id) {
                         @foreach ($products as $key => $product)                        
                             <tr class="border-b dark:border-neutral-500">
                                 <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $products->firstItem() + $key }}</td>
-                                <td class="whitespace-nowrap px-6 py-4">{{ $product->name }}</td>
+                                <td class="whitespace-nowrap px-6 py-4">{{ $product->name }} - [{{ $product->product_code }}]</td>
                                 <td class="whitespace-nowrap px-6 py-4">{{ $product->price }} Ks</td>
                                 <td class="whitespace-nowrap px-6 py-4">
                                     @if ($product->instock)

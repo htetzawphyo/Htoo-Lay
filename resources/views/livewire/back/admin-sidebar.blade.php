@@ -53,6 +53,9 @@
                             <li>
                                 <a href="/admin/products/add" wire:naviate class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Product Add</a>
                             </li>
+                            <li>
+                                <a href="/admin/products/add-discount" wire:naviate class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Add Discount</a>
+                            </li>
                         </ul>
                     </li>
 
@@ -72,6 +75,7 @@
                             </li>
                         </ul>
                     </li>
+
                     <li>
                         @livewire('auth/logout')
                     </li>
