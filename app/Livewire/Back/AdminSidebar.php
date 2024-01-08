@@ -1,21 +1,16 @@
 <?php
 
-namespace App\Livewire\Back;
+// namespace App\Livewire\Back;
 
-use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
+// use Livewire\Component;
+// use Illuminate\Support\Facades\Auth;
 
-class AdminSidebar extends Component
-{
-    public $title;
-
-    public function logout() {
-        Auth::logout();
-        $this->redirect('/', navigate: true);
-    }
+// class AdminSidebar extends Component
+// {
+//     public $title;
     
-    public function render()
-    {
-        return view('livewire.back.admin-sidebar');
-    }
-}
+//     public function render()
+//     {
+//         return view('livewire.back.admin-sidebar');
+//     }
+// }

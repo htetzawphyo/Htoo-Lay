@@ -29,14 +29,14 @@ with(fn () => [
                 </a>
             </div>
 
-            <div class="order-2 md:order-3 flex items-center" id="nav-content">
+            {{-- <div class="order-2 md:order-3 flex items-center" id="nav-content">
 
-                {{-- <a class="inline-block no-underline hover:text-violet-950" href="#">
+                <a class="inline-block no-underline hover:text-violet-950" href="#">
                     <svg class="fill-current text-violet-800 hover:text-violet-950" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                         <circle fill="none" cx="12" cy="7" r="3" />
                         <path d="M12 2C9.243 2 7 4.243 7 7s2.243 5 5 5 5-2.243 5-5S14.757 2 12 2zM12 10c-1.654 0-3-1.346-3-3s1.346-3 3-3 3 1.346 3 3S13.654 10 12 10zM21 21v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1h2v-1c0-2.757 2.243-5 5-5h4c2.757 0 5 2.243 5 5v1H21z" />
                     </svg>
-                </a> --}}
+                </a>
 
                 <a class="pl-3 inline-block no-underline hover:text-violet-950" href="#">
                     <svg class="fill-current text-violet-800 hover:text-violet-950" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -46,15 +46,30 @@ with(fn () => [
                     </svg>
                 </a>
 
-            </div>
+            </div> --}}
         </div>
     </nav>
 
-    <section class="bg-white py-8">
+    <section class="bg-white py-5">
+
+        {{-- <div class="flex gap-2">
+            <div class="flex">
+                <input type="text" placeholder="Search for the tool you like"
+                    class="w-full max-sm:w-full px-3 h-10 rounded-l border-2 border-sky-500 focus:outline-none focus:border-sky-500">
+                <button type="submit" class="bg-sky-500 text-white rounded-r px-2 md:px-3 py-0 md:py-1">Search</button>
+            </div>
+            <select id="pricingType" name="pricingType"
+                class="w-full md:w-80 h-10 border-2 border-sky-500 focus:outline-none focus:border-sky-500 text-sky-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
+                <option value="All" selected="">All</option>
+                <option value="Freemium">Freemium</option>
+                <option value="Free">Free</option>
+                <option value="Paid">Paid</option>
+            </select>
+        </div> --}}
 
         {{-- Search Form  --}}
         <div class="mb-3 flex justify-center">
-            <div class="relative mb-4 flex  flex-wrap items-stretch w-2/4 max-md:w-full">
+            <div class="relative mb-4 flex  flex-wrap items-stretch w-2/4 max-md:w-full mx-2">
                 <input wire:model.live.debounce.1000ms="search" type="search" class="relative m-0 -mr-0.5 block min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-700 dark:placeholder:text-gray-500 dark:focus:border-primary"
                 placeholder="Search"/>
 
@@ -63,28 +78,68 @@ with(fn () => [
                 </button>
             </div>
         </div>
+
+        {{-- Filter --}}
+        {{-- <div class="mb-3">
+            <label for="category">Filter</label>
+            <select id="category" name="pricingType"
+            class="w-2/4 max-md:w-full h-9 mx-2 border-2 border-gray-500 focus:outline-none focus:border-gray-500 text-gray-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
+                <option value="All" selected="">All</option>
+                <option value="Freemium">Freemium</option>
+                <option value="Free">Free</option>
+                <option value="Paid">Paid</option>
+            </select>
+
+            <label class="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2 ms-10" for="countries">
+                Filter
+            </label>
+            <select id="countries" class="w-2/12 max-md:w-full h-9 max-lg:ms-10 max-md:mx-2 border-2 border-gray-500 focus:outline-none focus:border-gray-500 text-gray-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
+                <option value="All" selected="">All</option>
+                <option value="Freemium">Freemium</option>
+                <option value="Free">Free</option>
+                <option value="Paid">Paid</option>
+            </select>
+        </div> --}}
         
-        <div class="container mx-auto flex items-center flex-wrap pt-4 pb-12">           
-            @foreach ($products as $product)                
-                <div class="w-full rounded-lg shadow-lg md:w-1/3 xl:w-1/4 p-6 flex flex-col">
-                    <div>
-                        <img class="hover:grow hover:shadow-lg " src="{{asset('storage/product-image/'.$product->image)}}">
-                        <div class="pt-3 mb-3 flex items-center justify-between">
-                            <p class="text-violet-800 font-primary font-bold">{{ $product->name }}</p>
-                            <p class="pt-1 text-gray-900">{{ $product->price }} Ks</p>
+        @if(session()->has('401-message'))
+            <div class="flex justify-center">
+                <div class="mb-4 rounded-sm bg-red-500 px-6 py-2 text-base text-neutral-200 w-11/12 max-md:w-ful" role="alert">
+                    {{ session('401-message') }}
+                </div>
+            </div>
+        @endif
+        
+        <div>
+            {{-- <div class="mb-3 flex justify-start ms-20">
+                <select id="pricingType" name="pricingType"
+                class="w-2/12 h-9 mx-2 border-2 border-gray-500 focus:outline-none focus:border-gray-500 text-gray-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
+                    <option value="All" selected="">All</option>
+                    <option value="Freemium">Freemium</option>
+                    <option value="Free">Free</option>
+                    <option value="Paid">Paid</option>
+                </select>
+            </div> --}}
+            <div class="container mx-auto flex items-center flex-wrap pt-4 pb-12">           
+                @foreach ($products as $product)                
+                    <div class="w-full rounded-lg shadow-lg md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+                        <div>
+                            <img class="hover:grow hover:shadow-lg " src="{{asset('storage/product-image/'.$product->image)}}">
+                            <div class="pt-3 mb-3 flex items-center justify-between">
+                                <p class="text-violet-800 font-primary font-bold">{{ $product->name }}</p>
+                                <p class="pt-1 text-gray-900">{{ $product->price }} Ks</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="" class="font-primary inline-block rounded bg-violet-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-violet-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-violet-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-violet-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">View Detail</a>
+                            @if ($product->instock)                            
+                                <span class="bg-green-800 text-red-100 text-xs font-medium me-2 px-2 flex items-center rounded-full ">Instock</span>
+                            @else                            
+                                <span class="bg-red-800 text-red-100 text-xs font-medium me-2 px-2 flex items-center rounded-full ">Out of Stock</span>
+                            @endif
                         </div>
                     </div>
-                    <div class="flex justify-between">
-                        <a href="" class="font-primary inline-block rounded bg-violet-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-violet-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-violet-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-violet-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">View Detail</a>
-                        @if ($product->instock)                            
-                            <span class="bg-green-800 text-red-100 text-xs font-medium me-2 px-2 flex items-center rounded-full ">Instock</span>
-                        @else                            
-                            <span class="bg-red-800 text-red-100 text-xs font-medium me-2 px-2 flex items-center rounded-full ">Out of Stock</span>
-                        @endif
-                    </div>
-                </div>
-            @endforeach
-
+                @endforeach
+            </div>
         </div>
 
     </section>
