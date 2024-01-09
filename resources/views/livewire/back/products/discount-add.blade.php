@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\Product;
-use function Livewire\Volt\{state, layout, with, usesPagination};
+use App\Models\Discount;
+use function Livewire\Volt\{state, layout, with, usesPagination, rules};
 
 layout('livewire.back.admin-sidebar');
 
@@ -9,9 +10,15 @@ usesPagination();
 
 state([
     'products' => [],
+    'id' => '',
     'name' => '',
     'price' => '',
-    'searchData' => ''
+    'searchData' => '',
+    'discount_amount' => ''
+]);
+
+rules([
+    'discount_amount' => ['required', 'numeric'],
 ]);
 
 $search = function() {
@@ -22,7 +29,31 @@ $search = function() {
     }else{
         $this->products = [];
     }
+};
+
+$selectProdcut = function($id) {
+    $product = Product::find($id);
+
+    $this->id = $id;
+    $this->name = $product->name . ' - ' . $product->product_code;
+    $this->price = $product->price;
+    $this->discount_amount = $product->discount->discount_amount ?? '';
+
+    $this->searchData = '';
+    $this->products = [];
+};
+
+$save = function() {
+    $this->validate();
+
+    Discount::updateOrCreate(
+        ['product_id' => $this->id],
+        ['discount_amount' => $this->discount_amount]
+    );
+
+    $this->redirect("/admin/products", navigate: true);
 }
+
 ?>
 
 <div>
@@ -48,7 +79,7 @@ $search = function() {
             @if ($products)         
                 <div class="absolute top-full left-0 max-h-64 bg-gray-500 w-full z-50 overflow-y-scroll">
                     @foreach ($products as $product)                        
-                        <div class="bg-gray-500 ps-5 py-2 text-md text-gray-900 hover:bg-gray-700 cursor-pointer">
+                        <div wire:click="selectProdcut({{ $product->id }})" class="bg-gray-500 ps-5 py-2 text-md text-gray-900 hover:bg-gray-700 cursor-pointer">
                             <div>
                                 <span class="font-semibold">{{ $product->name }} - [{{ $product->product_code }}]</span> _ 
                                 <span class="text-gray-800 font-semibold">{{ $product->price }}</span>
@@ -56,27 +87,9 @@ $search = function() {
                         </div>
                     @endforeach
                 </div>
-                @endif
-            </div>
+            @endif
         </div>
-        {{-- <div class="bg-gray-500 ps-5 py-2 text-md text-gray-900 hover:bg-gray-700 cursor-pointer">
-            <div>
-                <span class="font-semibold">H</span> _ 
-                <span class="text-gray-800 font-semibold">HHHH</span>
-            </div>
-        </div>
-        <div class="bg-gray-500 ps-5 py-2 text-md text-gray-900 hover:bg-gray-700 cursor-pointer">
-            <div>
-                <span class="font-semibold">H</span> _ 
-                <span class="text-gray-800 font-semibold">HHHH</span>
-            </div>
-        </div>
-        <div class="bg-gray-500 ps-5 py-2 text-md text-gray-900 hover:bg-gray-700 cursor-pointer">
-            <div>
-                <span class="font-semibold">H</span> _ 
-                <span class="text-gray-800 font-semibold">HHHH</span>
-            </div>
-        </div> --}}
+    </div>
    
     <form class="w-full" wire:submit="save">
         <div class="-mx-3 mb-6">
@@ -102,7 +115,10 @@ $search = function() {
                 <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="product-price">
                     Discount Amount
                 </label>
-                <input class="shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)]  block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-cyan-500" id="product-price" type="number" placeholder="Product Price">
+                <input wire:model="discount_amount" class="shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)]  block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-cyan-500" id="product-price" type="number" placeholder="Product Price">
+                <div class="text-red-600 text-sm mb-3">
+                    @error('discount_amount') {{ $message }} @enderror
+                </div>
             </div>
         </div>
 

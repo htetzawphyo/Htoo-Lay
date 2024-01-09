@@ -19,6 +19,10 @@ $delete = function($id) {
     $product = Product::find($id);
     Storage::delete('public/product-image/'. $product->image);
     $product->delete();
+
+    if($product->discount){
+        $product->discount->delete();
+    }
 }
 
 ?>

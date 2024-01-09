@@ -27,7 +27,7 @@ rules([
 $save = function() {
     $latestId = Product::latest()->value('id') ?? 0;
     $product_code = sprintf('CT'.'%04d',($latestId + 1));
-    
+
     $this->validate();
 
     $this->instock = !empty($this->instock[0]) ? 1 : 0; // For Instock
