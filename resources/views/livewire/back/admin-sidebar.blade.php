@@ -23,7 +23,7 @@
                 <ul class="space-y-2 font-medium">
                     <li>
                         <div class="flex justify-between">
-                            <h4 class="flex-1 text-lg ms-3 text-left rtl:text-right whitespace-nowrap text-white">HTOO LAY</h4>
+                            <h4 class="flex-1 text-lg ms-3 text-left rtl:text-right whitespace-nowrap text-white">Charming Treasures 20</h4>
                             <i class="fa-solid fa-xmark text-white mt-2 cursor-pointer sm:hidden" id="close-sidebar"></i>
                         </div>
                     </li>

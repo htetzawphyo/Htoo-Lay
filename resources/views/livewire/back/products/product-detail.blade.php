@@ -22,7 +22,7 @@ rules([
     'name' => ['required'],
     'price' => ['required','numeric'],
     'category_id' => ['required', 'numeric'],
-    'image' => ['image', 'mimes:png,jpg']
+    'image' => ['image', 'mimes:png,jpg', 'max:2048']
 ]);
 
 $updateProduct = function() {

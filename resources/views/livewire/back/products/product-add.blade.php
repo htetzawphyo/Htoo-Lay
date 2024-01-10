@@ -21,7 +21,7 @@ rules([
     'name' => ['required'],
     'price' => ['required','numeric'],
     'category_id' => ['required', 'numeric'],
-    'image' => ['required', 'image', 'mimes:png,jpg']
+    'image' => ['required', 'image', 'mimes:png,jpg', 'max:2048']
 ]);
 
 $save = function() {

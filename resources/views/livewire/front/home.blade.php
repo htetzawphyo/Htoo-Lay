@@ -1,35 +1,57 @@
 <?php
 
 use App\Models\Product;
-use function Livewire\Volt\{state, with, usesPagination};
-
-// state(['products' => fn() => Product::with('category')->get()]);
+use App\Models\Category;
+use function Livewire\Volt\{state, with, usesPagination, mount};
 
 usesPagination();
 
-state(['search']);
-
-with(fn () => [
-    'products' => Product::with('category', 'discount')
-                    ->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('product_code', 'like', '%' . $this->search . '%')->paginate(10),
+state([
+    'search', 
+    'filterId',
 ]);
 
+with(fn () => [
+    'products' => $this->getFilteredProducts(),
+]);
+
+$getFilteredProducts = function ()
+{
+    $query = Product::with('category', 'discount');
+
+    if ($this->filterId) {
+        $query->where('category_id', $this->filterId);
+    } 
+    if($this->search){
+        $query->where('name', 'like', '%' . $this->search . '%')
+            ->orWhere('product_code', 'like', '%' . $this->search . '%');
+    }
+
+    return $query->orderBy('created_at', 'desc')->paginate(10);
+}
+
+// with(fn () => [
+//     'products' => Product::with('category', 'discount')
+//                     ->where('name', 'like', '%' . $this->search . '%')
+//                     ->orWhere('product_code', 'like', '%' . $this->search . '%')->paginate(10),
+// ]);
+
+// with(fn () => [
+//     $products = $this->filterId ? Product::with('category', 'discount')->whereCategoryId($this->filterId) : Product::with('category', 'discount')->where('name', 'like', '%' . $this->search . '%')->orWhere('product_code', 'like', '%' . $this->search . '%'),
+    
+//     'products' => $products->orderBy('created_at', 'desc')->paginate(10),
+// ]);
 ?>
 
 <div class="bg-white text-gray-600 work-sans leading-normal text-base tracking-normal">
     <!--Nav-->
     <nav id="header" class="w-full z-30 top-0 py-1">
         <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-6 py-3">
-
-            <div class="order-1 md:order-2">
-                <a class="flex items-center tracking-wide no-underline hover:no-underline font-primary font-bold text-gray-800 text-2xl " href="#">
-                    <svg class="fill-current text-violet-800 mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path d="M5,22h14c1.103,0,2-0.897,2-2V9c0-0.553-0.447-1-1-1h-3V7c0-2.757-2.243-5-5-5S7,4.243,7,7v1H4C3.447,8,3,8.447,3,9v11 C3,21.103,3.897,22,5,22z M9,7c0-1.654,1.346-3,3-3s3,1.346,3,3v1H9V7z M5,10h2v2h2v-2h6v2h2v-2h2l0.002,10H5V10z" />
-                    </svg>
-                    Charming Treasures 20
-                </a>
-            </div>
+            <a href="/" class="flex items-center tracking-wide no-underline hover:no-underline font-primary font-bold text-gray-800 text-2xl ">
+                <i class="fa-solid fa-hand-sparkles fill-current text-violet-800 mr-2"></i>
+                <span class="bg-gradient-to-r from-stone-900 via-violet-500 to-violet-900 text-transparent bg-clip-text">Charming Treasures 20</span>
+            </a>
+            
 
             {{-- <div class="order-2 md:order-3 flex items-center" id="nav-content">
 
@@ -54,54 +76,13 @@ with(fn () => [
 
     <section class="bg-white py-5">
 
-        {{-- <div class="flex gap-2">
-            <div class="flex">
-                <input type="text" placeholder="Search for the tool you like"
-                    class="w-full max-sm:w-full px-3 h-10 rounded-l border-2 border-sky-500 focus:outline-none focus:border-sky-500">
-                <button type="submit" class="bg-sky-500 text-white rounded-r px-2 md:px-3 py-0 md:py-1">Search</button>
-            </div>
-            <select id="pricingType" name="pricingType"
-                class="w-full md:w-80 h-10 border-2 border-sky-500 focus:outline-none focus:border-sky-500 text-sky-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
-                <option value="All" selected="">All</option>
-                <option value="Freemium">Freemium</option>
-                <option value="Free">Free</option>
-                <option value="Paid">Paid</option>
-            </select>
-        </div> --}}
-
         {{-- Search Form  --}}
-        <div class="mb-3 flex justify-center">
+        <div class="mb-3 flex justify-center mx-6">
             <div class="relative mb-4 flex  flex-wrap items-stretch w-2/4 max-md:w-full mx-2">
-                <input wire:model.live.debounce.1000ms="search" type="search" class="relative m-0 -mr-0.5 block min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-700 dark:placeholder:text-gray-500 dark:focus:border-primary"
+                <input wire:model.live.debounce.1000ms="search" type="search" class="relative m-0 -mr-0.5 block min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-700 dark:placeholder:text-gray-500 dark:focus:border-primary"
                 placeholder="Search"/>
-
-                <button class="relative z-[2] flex items-center rounded-r bg-gray-500 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-gray-700 hover:shadow-lg focus:bg-gray-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-800 active:shadow-lg" type="button">
-                    <i class="fa-solid fa-magnifying-glass text-gray-500 dark:text-gray-400"></i>
-                </button>
             </div>
         </div>
-
-        {{-- Filter --}}
-        {{-- <div class="mb-3">
-            <label for="category">Filter</label>
-            <select id="category" name="pricingType"
-            class="w-2/4 max-md:w-full h-9 mx-2 border-2 border-gray-500 focus:outline-none focus:border-gray-500 text-gray-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
-                <option value="All" selected="">All</option>
-                <option value="Freemium">Freemium</option>
-                <option value="Free">Free</option>
-                <option value="Paid">Paid</option>
-            </select>
-
-            <label class="block uppercase tracking-wide text-gray-700 text-lg font-bold mb-2 ms-10" for="countries">
-                Filter
-            </label>
-            <select id="countries" class="w-2/12 max-md:w-full h-9 max-lg:ms-10 max-md:mx-2 border-2 border-gray-500 focus:outline-none focus:border-gray-500 text-gray-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
-                <option value="All" selected="">All</option>
-                <option value="Freemium">Freemium</option>
-                <option value="Free">Free</option>
-                <option value="Paid">Paid</option>
-            </select>
-        </div> --}}
         
         @if(session()->has('401-message'))
             <div class="flex justify-center">
@@ -111,16 +92,17 @@ with(fn () => [
             </div>
         @endif
         
-        <div>
-            {{-- <div class="mb-3 flex justify-start ms-20">
+        {{-- <div>
+            <div class="mb-3 flex justify-start ms-20">
                 <select id="pricingType" name="pricingType"
-                class="w-2/12 h-9 mx-2 border-2 border-gray-500 focus:outline-none focus:border-gray-500 text-gray-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
+                class="w-6/12 h-9 mx-2 border-2 border-gray-500 focus:outline-none focus:border-gray-500 text-gray-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
                     <option value="All" selected="">All</option>
                     <option value="Freemium">Freemium</option>
                     <option value="Free">Free</option>
                     <option value="Paid">Paid</option>
                 </select>
-            </div> --}}
+            </div>
+            
             <div class="container mx-auto flex items-center flex-wrap pt-4 pb-12">           
                 @foreach ($products as $product)                
                     <div class="w-full rounded-lg shadow-lg md:w-1/3 xl:w-1/4 p-6 flex flex-col">
@@ -152,7 +134,52 @@ with(fn () => [
                     </div>
                 @endforeach
             </div>
-        </div>
+        </div> --}}
 
+
+        <div class="flex items-center flex-wrap pt-4 pb-12 mx-6">
+            <div class="mb-3 flex justify-start">
+                <select id="filter" wire:model.live="filterId"  name="filter" class="h-9 mx-2 border-2 border-gray-500 focus:outline-none focus:border-gray-500 text-gray-500 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
+                    <option value="0" selected>All</option>
+                    @foreach (Category::all() as $category)                        
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="flex flex-wrap">
+                @foreach ($products as $product)
+                    <div class="w-full rounded-lg shadow-lg md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+                        <div>
+                            <img class="hover:grow hover:shadow-lg " src="{{asset('storage/product-image/'.$product->image)}}">
+                            <div class="pt-3 mb-3 flex items-center justify-between">
+                                <p class="text-violet-800 font-primary font-bold">
+                                    {{ $product->name }} 
+                                    <span class="text-xs text-gray-800"> - {{ $product->product_code }}</span>
+                                </p>
+                                <div class="">
+                                    @if ($product->discount)
+                                        <s class="pt-1 text-gray-900 inline-block">{{ $product->price}} Ks</s>
+                                        <p class="pt-1 text-red-600 inline-block">{{ $product->price - $product->discount->discount_amount }} Ks</p>
+                                    @else                                    
+                                        <p class="pt-1 text-gray-900">{{ $product->price }} Ks</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            {{-- <a href="" class="font-primary inline-block rounded bg-violet-500 text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)] hover:bg-violet-600 hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] focus:bg-violet-800 focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] active:bg-violet-700 active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal transition duration-150 ease-in-out focus:outline-none focus:ring-0">View Detail</a> --}}
+                            @if ($product->instock)                            
+                                <span class="bg-green-800 text-red-100 text-xs font-medium me-2 px-2 flex items-center rounded-full ">Instock</span>
+                            @else                            
+                                <span class="bg-red-800 text-red-100 text-xs font-medium me-2 px-2 flex items-center rounded-full ">Out of Stock</span>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        
+        {{ $products->withQueryString()->links(data: ['scrollTo' => false]) }}
     </section>
 </div>

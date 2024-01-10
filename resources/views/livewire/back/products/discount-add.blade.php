@@ -66,15 +66,6 @@ $save = function() {
             <input wire:model.live.debounce.1000ms="searchData" wire:input.debounce.1000ms="search" type="search" class="relative m-0 -mr-0.5 block min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-700 dark:placeholder:text-gray-500 dark:focus:border-primary"
             placeholder="Search product.."/>
 
-            <!--Search button-->
-            {{-- <button class="relative z-[2] flex items-center rounded-r bg-gray-600 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-gray-700 hover:shadow-lg focus:bg-gray-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-800 active:shadow-lg"
-            type="button"
-            id="button-addon1"
-            data-te-ripple-init
-            data-te-ripple-color="light">
-            <i class="fa-solid fa-magnifying-glass text-gray-500 dark:text-gray-400"></i>
-            </button> --}}
-
             <!-- Search Results -->
             @if ($products)         
                 <div class="absolute top-full left-0 max-h-64 bg-gray-500 w-full z-50 overflow-y-scroll">
